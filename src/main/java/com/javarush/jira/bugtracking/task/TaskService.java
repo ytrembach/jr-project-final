@@ -21,7 +21,6 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.bugtracking.task.TaskUtil.fillExtraFields;
@@ -146,9 +145,7 @@ public class TaskService {
     @Transactional
     public void addTag(long id, String tagtoAdd) {
         Task task = Util.checkExist(id, handler.getRepository().findFullById(id));
-        if (!task.getTags().contains(tagtoAdd)) {
-            task.getTags().add(tagtoAdd);
-        }
+        task.getTags().add(tagtoAdd);
     }
 
     private void checkAssignmentActionPossible(long id, String userType, boolean assign) {
