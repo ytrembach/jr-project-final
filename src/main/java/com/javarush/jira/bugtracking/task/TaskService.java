@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.bugtracking.task.TaskUtil.fillExtraFields;
@@ -130,6 +131,24 @@ public class TaskService {
                 .orElseThrow(() -> new NotFoundException(String
                         .format("Not found assignment with userType=%s for task {%d} for user {%d}", userType, id, userId)));
         assignment.setEndpoint(LocalDateTime.now());
+    }
+
+    @Transactional
+    public void removeTag(long id, String tagToRemove) {
+        Task task = Util.checkExist(id, handler.getRepository().findFullById(id));
+        if (task.getTags().contains(tagToRemove)) {
+            task.getTags().remove(tagToRemove);
+        } else {
+            throw new NotFoundException(String.format("Not found tag %s to remove from task %s", tagToRemove, id));
+        }
+    }
+
+    @Transactional
+    public void addTag(long id, String tagtoAdd) {
+        Task task = Util.checkExist(id, handler.getRepository().findFullById(id));
+        if (!task.getTags().contains(tagtoAdd)) {
+            task.getTags().add(tagtoAdd);
+        }
     }
 
     private void checkAssignmentActionPossible(long id, String userType, boolean assign) {
