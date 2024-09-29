@@ -112,3 +112,7 @@ server:
       enabled: true # Enable http encoding support
       force: true
 springdoc.swagger-ui.path: /doc
+
+token:
+  signing:
+    key: f4SBTzR+UnCzx+HvgpUygiBj9qqu26f+IPT9N30Es3o=

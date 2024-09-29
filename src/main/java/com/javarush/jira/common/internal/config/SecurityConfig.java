@@ -94,7 +94,9 @@ public class SecurityConfig {
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .deleteCookies("JSESSIONID")
-                .and().csrf().disable();
+                .and().csrf().disable()
+//                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                ;
         return http.build();
     }
 
