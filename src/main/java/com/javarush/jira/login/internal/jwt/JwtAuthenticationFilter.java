@@ -27,7 +27,6 @@ import static com.javarush.jira.login.internal.jwt.JwtService.JWT_COOKIE_NAME;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-
     private final JwtService jwtService;
     private final UserRepository userRepository;
 
@@ -59,7 +58,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             user, null, user.getRoles());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     securityContext.setAuthentication(authToken);
-                    String a = "1";
                 }
             }
         }
