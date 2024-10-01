@@ -30,7 +30,7 @@ import java.util.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User extends TimestampEntry implements HasIdAndEmail, Serializable, UserDetails {
+public class User extends TimestampEntry implements HasIdAndEmail, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -118,32 +118,5 @@ public class User extends TimestampEntry implements HasIdAndEmail, Serializable,
 
     public boolean hasRole(Role role) {
         return roles != null && roles.contains(role);
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-
-
     }
 }

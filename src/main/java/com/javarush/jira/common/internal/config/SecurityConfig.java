@@ -3,6 +3,8 @@ package com.javarush.jira.common.internal.config;
 import com.javarush.jira.login.AuthUser;
 import com.javarush.jira.login.Role;
 import com.javarush.jira.login.internal.UserRepository;
+import com.javarush.jira.login.internal.jwt.JwtAuthenticationSuccessHandler;
+import com.javarush.jira.login.internal.jwt.JwtService;
 import com.javarush.jira.login.internal.sociallogin.CustomOAuth2UserService;
 import com.javarush.jira.login.internal.sociallogin.CustomTokenResponseConverter;
 import lombok.AllArgsConstructor;
@@ -24,6 +26,7 @@ import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCo
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
 import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -39,6 +42,7 @@ public class SecurityConfig {
     private final UserRepository userRepository;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    private final JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -79,10 +83,10 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll()
                 .loginPage("/view/login")
-                .defaultSuccessUrl("/", true)
+                .defaultSuccessUrl("/", true).successHandler(jwtAuthenticationSuccessHandler)
                 .and().oauth2Login()
                 .loginPage("/view/login")
-                .defaultSuccessUrl("/", true)
+                .defaultSuccessUrl("/", true).successHandler(jwtAuthenticationSuccessHandler)
                 .tokenEndpoint()
                 .accessTokenResponseClient(accessTokenResponseClient())
                 .and()
@@ -94,8 +98,9 @@ public class SecurityConfig {
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .deleteCookies("JSESSIONID")
+                .deleteCookies(JwtService.JWT_COOKIE_NAME)
                 .and().csrf().disable()
-//                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 ;
         return http.build();
     }
